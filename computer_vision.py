@@ -159,3 +159,7 @@ for epoch in tqdm(range(epochs)):
 
     ## Print out what's happening
     print(f"\nTrain loss: {train_loss:.5f} | Test loss: {test_loss:.5f}, Test acc: {test_acc:.2f}%\n")
+
+# The train and test loss should be something around 0.45 - 0.50, which is not especially good but should see that in each training epoch the model is atleast getting better.
+
+
