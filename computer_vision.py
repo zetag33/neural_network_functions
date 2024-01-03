@@ -162,4 +162,39 @@ for epoch in tqdm(range(epochs)):
 
 # The train and test loss should be something around 0.45 - 0.50, which is not especially good but should see that in each training epoch the model is atleast getting better.
 
+# Setup device agnostic code
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# Let's now introduce some ReLu layers to introduce non-linearity to the model so the it is able to draw non straight lines, ReLu effect into the data is if x < 0 then 0 else x, allowing non-linearity
+
+# Create a model with non-linear and linear layers
+class FashionMNISTModelV1(nn.Module):
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
+        super().__init__()
+        self.layer_stack = nn.Sequential(
+            nn.Flatten(), # flatten inputs into single vector
+            nn.Linear(in_features=input_shape, out_features=hidden_units),
+            nn.ReLU(),
+            nn.Linear(in_features=hidden_units, out_features=output_shape),
+            nn.ReLU()
+        )
+    
+    def forward(self, x: torch.Tensor):
+        return self.layer_stack(x)
+
+# Instantiate the model
+
+torch.manual_seed(42)
+model_1 = FashionMNISTModelV1(input_shape=784, # number of input features
+    hidden_units=10,
+    output_shape=len(class_names) # number of output classes desired
+).to(device) # send model to GPU if it's available
+
+# Set up loss function and optimizer
+
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(params=model_1.parameters(), 
+                            lr=0.1)
+
+
 
